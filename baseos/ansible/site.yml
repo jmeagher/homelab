@@ -1,0 +1,47 @@
+---
+- name: Configure Homelab Servers
+  hosts: homelab
+  become: true
+  vars_files:
+    - inventory.yml
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install system packages
+      apt:
+        name: "{{ system_packages }}"
+        state: present
+
+    - name: Install development packages
+      apt:
+        name: "{{ dev_packages }}"
+        state: present
+
+    - name: Set timezone
+      timezone:
+        name: "{{ timezone }}"
+
+    - name: Set locale
+      locale_gen:
+        name: "{{ locale }}"
+        state: present
+
+    - name: Configure admin users
+      user:
+        name: "{{ item.name }}"
+        groups: "{{ item.groups }}"
+        shell: "{{ item.shell }}"
+        state: present
+      loop: "{{ admin_users }}"
+
+    - name: Configure sudoers for admin users
+      lineinfile:
+        path: /etc/sudoers.d/{{ item.name }}
+        line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
+        create: yes
+        mode: '0440'
+        validate: 'visudo -cf %s'
+      loop: "{{ admin_users }}"

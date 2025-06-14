@@ -1,0 +1,26 @@
+---
+# Common system packages to install
+system_packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - software-properties-common
+  - neovim
+  - htop
+  - tmux
+  - git
+
+# Development packages
+dev_packages:
+  - build-essential
+
+# System configuration
+timezone: "America/Chicago"
+locale: "en_US.UTF-8"
+
+# User configuration
+admin_users:
+  - name: "jmeagher"
+    groups: ["sudo"]
+    shell: /bin/bash
+    sudo_nopasswd: true 
