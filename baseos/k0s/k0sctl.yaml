@@ -11,18 +11,27 @@ spec:
       port: 22
       keyPath: ~/.ssh/id_rsa
     role: controller+worker
+    noTaints: true
+    installFlags:
+      - --labels=kubernetes.io/os=linux,kubernetes.io/arch=amd64
   - ssh:
       address: homelab-7502
       user: jmeagher
       port: 22
       keyPath: ~/.ssh/id_rsa
+    noTaints: true
     role: controller+worker
+    installFlags:
+      - --labels=kubernetes.io/os=linux,kubernetes.io/arch=amd64
   - ssh:
       address: homelab-9be8
       user: jmeagher
       port: 22
       keyPath: ~/.ssh/id_rsa
     role: controller+worker
+    noTaints: true
+    installFlags:
+      - --labels=kubernetes.io/os=linux,kubernetes.io/arch=amd64
   options:
     wait:
       enabled: true
@@ -39,8 +48,3 @@ spec:
       limit: 30
       workerDisruptionPercent: 1
       uploads: 5
-    evictTaint:
-      enabled: false
-      taint: k0sctl.k0sproject.io/evict=true
-      effect: NoExecute
-      controllerWorkers: false
