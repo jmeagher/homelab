@@ -45,3 +45,28 @@
         mode: '0440'
         validate: 'visudo -cf %s'
       loop: "{{ admin_users }}"
+
+    - name: Copy over the NTP configuration
+      template:
+        src: ntp.conf.j2
+        dest: /etc/ntp.conf
+      tags:
+        - ntp
+
+    - name: Ensure NTP service is started and enabled
+      service:
+        name: ntpd
+        state: started
+        enabled: yes
+      tags:
+        - ntp
+
+    - name: Disable auto-sleep and related services
+      systemd_service:
+        name: "{{ item }}"
+        masked: true
+      loop:
+        - sleep.target
+        - suspend.target
+        - hibernate.target
+        - hybrid-sleep.target

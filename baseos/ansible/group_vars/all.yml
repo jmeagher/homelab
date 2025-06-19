@@ -9,6 +9,7 @@ system_packages:
   - htop
   - tmux
   - git
+  - ntp
 
 # Development packages
 dev_packages:
