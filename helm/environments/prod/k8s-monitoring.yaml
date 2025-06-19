@@ -1,6 +1,10 @@
 # Set the secrets for this with:
-# kubectl -n grafana create secret generic grafana-access-token --from-literal=token='...'
-# kubectl -n grafana create secret generic grafana-prometheus-user --from-literal=token='...'
+# kubectl -n grafana create secret generic grafana-login \
+#   --from-literal=token="$TOKEN" \
+#   --from-literal=prometheus-user=... \
+#   --from-literal=loki-user=... \
+#   --from-literal=otlp-user=...
+# With the values coming from the "Kubernetes/Configuration" area of Grafana Cloud
 
 cluster:
   name: homelab
@@ -10,15 +14,73 @@ destinations:
     url: https://prometheus-prod-13-prod-us-east-0.grafana.net./api/prom/push
     auth:
       type: basic
-      usernameKey: grafana-prometheus-user
-      passwordKey: grafana-access-token    
+      usernameKey: prometheus-user
+      passwordKey: token
     secret:
       create: false
-      name: prometheus-secret
+      name: grafana-login
       namespace: grafana
+  - name: grafana-cloud-logs
+    type: loki
+    url: https://logs-prod-006.grafana.net./loki/api/v1/push
+    auth:
+      type: basic
+      usernameKey: loki-user
+      passwordKey: token
+    secret:
+      create: false
+      name: grafana-login
+      namespace: grafana
+  - name: grafana-cloud-otlp-endpoint
+    type: otlp
+    url: https://otlp-gateway-prod-us-east-0.grafana.net./otlp
+    protocol: http
+    auth:
+      type: basic
+      usernameKey: otlp-user
+      passwordKey: token
+    secret:
+      create: false
+      name: grafana-login
+      namespace: grafana
+    metrics:
+      enabled: true
+    logs:
+      enabled: true
+    traces:
+      enabled: true
+
 
 clusterMetrics:
   enabled: true
+  kepler:
+    enabled: true
+annotationAutodiscovery:
+  enabled: true
+prometheusOperatorObjects:
+  enabled: true
+clusterEvents:
+  enabled: true
+nodeLogs:
+  enabled: true
+podLogs:
+  enabled: true
+applicationObservability:
+  enabled: true
+  receivers:
+    otlp:
+      grpc:
+        enabled: true
+        port: 4317
+      http:
+        enabled: true
+        port: 4318
+    zipkin:
+      enabled: true
+      port: 9411
+  connectors:
+    grafanaCloudMetrics:
+      enabled: true
 integrations:
   alloy:
     instances:
@@ -26,5 +88,28 @@ integrations:
         labelSelectors:
           app.kubernetes.io/name:
             - alloy-metrics
+            - alloy-singleton
+            - alloy-logs
+            - alloy-receiver
 alloy-metrics:
   enabled: true
+alloy-singleton:
+  enabled: true
+alloy-logs:
+  enabled: true
+alloy-receiver:
+  enabled: true
+  alloy:
+    extraPorts:
+      - name: otlp-grpc
+        port: 4317
+        targetPort: 4317
+        protocol: TCP
+      - name: otlp-http
+        port: 4318
+        targetPort: 4318
+        protocol: TCP
+      - name: zipkin
+        port: 9411
+        targetPort: 9411
+        protocol: TCP
