@@ -1,0 +1,21 @@
+repositories:
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+
+environments:
+  dev:
+    values:
+      - environments/dev/values.yaml
+  prod:
+    values:
+      - environments/prod/values.yaml
+
+releases:
+  - name: grafana-k8s-monitoring
+    namespace: grafana
+    chart: grafana/k8s-monitoring
+    version: "3.0.1"
+    values:
+      - environments/prod/k8s-monitoring.yaml
+    createNamespace: true
+    installed: {{ eq .Environment.Name "prod" }} 

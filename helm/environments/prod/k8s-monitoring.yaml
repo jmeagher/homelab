@@ -1,0 +1,30 @@
+# Set the secrets for this with:
+# kubectl -n grafana create secret generic grafana-access-token --from-literal=token='...'
+# kubectl -n grafana create secret generic grafana-prometheus-user --from-literal=token='...'
+
+cluster:
+  name: homelab
+destinations:
+  - name: grafana-cloud-metrics
+    type: prometheus
+    url: https://prometheus-prod-13-prod-us-east-0.grafana.net./api/prom/push
+    auth:
+      type: basic
+      usernameKey: grafana-prometheus-user
+      passwordKey: grafana-access-token    
+    secret:
+      create: false
+      name: prometheus-secret
+      namespace: grafana
+
+clusterMetrics:
+  enabled: true
+integrations:
+  alloy:
+    instances:
+      - name: alloy
+        labelSelectors:
+          app.kubernetes.io/name:
+            - alloy-metrics
+alloy-metrics:
+  enabled: true

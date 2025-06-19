@@ -1,0 +1,26 @@
+# /etc/logrotate.conf: Managed by Ansible
+
+# Rotate log files weekly or when they exceed 1GB
+weekly
+size 1G
+
+# Keep 4 weeks worth of backlogs or 4 rotated files, whichever is less
+rotate 4
+
+# Create new (empty) log files after rotating old ones
+create
+
+# Use date as a suffix of the rotated file
+dateext
+
+# Compress rotated log files
+compress
+
+# Uncompress logs for use by applications
+compresscmd /bin/gzip
+uncompresscmd /bin/gunzip
+
+su root root
+
+# Include additional package-provided logrotate configs
+include /etc/logrotate.d

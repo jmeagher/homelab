@@ -70,3 +70,25 @@
         - suspend.target
         - hibernate.target
         - hybrid-sleep.target
+
+    - name: Deploy logrotate configuration
+      template:
+        src: logrotate.conf.j2
+        dest: /etc/logrotate.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify:
+        - restart logrotate
+
+    - name: Ensure logrotate is enabled and running
+      service:
+        name: logrotate
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restart logrotate
+      service:
+        name: logrotate
+        state: restarted
