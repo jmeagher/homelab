@@ -11,6 +11,7 @@ system_packages:
   - git
   - ntp
   - logrotate
+  - net-tools
 
 # Development packages
 dev_packages:

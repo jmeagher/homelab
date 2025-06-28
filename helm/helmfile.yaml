@@ -1,6 +1,8 @@
 repositories:
   - name: grafana
     url: https://grafana.github.io/helm-charts
+  - name: tailscale
+    url: https://pkgs.tailscale.com/helmcharts
 
 environments:
   dev:
@@ -11,11 +13,29 @@ environments:
       - environments/prod/values.yaml
 
 releases:
+  - name: alloy-operator
+    namespace: grafana
+    chart: grafana/alloy-operator
+    version: "0.3.4"
+    values:
+      - environments/prod/alloy-operator.yaml
+    createNamespace: true
+    installed: {{ eq .Environment.Name "prod" }}
   - name: grafana-k8s-monitoring
     namespace: grafana
     chart: grafana/k8s-monitoring
-    version: "3.0.1"
+    version: "3.1.0"
+    needs:
+    - alloy-operator
     values:
       - environments/prod/k8s-monitoring.yaml
     createNamespace: true
-    installed: {{ eq .Environment.Name "prod" }} 
+    installed: {{ eq .Environment.Name "prod" }}
+  - name: tailscale-operator
+    namespace: tailscale
+    chart: tailscale/tailscale-operator
+    version: "1.84.2"
+    values:
+      - environments/prod/tailscale-operator.yaml
+    createNamespace: true
+    installed: {{ eq .Environment.Name "prod" }}

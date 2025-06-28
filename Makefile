@@ -13,8 +13,6 @@ k0sreset:
 
 k0sconfig:
 	cd baseos/k0s && k0sctl kubeconfig --config k0sctl.yaml > ~/.kube/config
-
-
 # Deploy with Helmfile
 helm:
 	cd helm && helmfile -e prod apply

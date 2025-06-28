@@ -19,8 +19,8 @@ spec:
       user: jmeagher
       port: 22
       keyPath: ~/.ssh/id_rsa
-    noTaints: true
-    role: controller+worker
+    # noTaints: true
+    role: worker
     installFlags:
       - --labels=kubernetes.io/os=linux,kubernetes.io/arch=amd64
   - ssh:
@@ -28,8 +28,8 @@ spec:
       user: jmeagher
       port: 22
       keyPath: ~/.ssh/id_rsa
-    role: controller+worker
-    noTaints: true
+    role: worker
+    # noTaints: true
     installFlags:
       - --labels=kubernetes.io/os=linux,kubernetes.io/arch=amd64
   options:

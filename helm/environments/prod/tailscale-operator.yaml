@@ -1,0 +1,4 @@
+# Set secrets for oauth setup with:
+# kubectl -n tailscale create secret generic operator-oauth 
+#  --from-literal=clientId:="$CLIENT_ID" \
+#  --from-literal=clientSecret:="$CLIENT_SECRET"
