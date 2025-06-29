@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Usage: ./all_ssh <command>
+# Example: ./all_ssh uptime
+
+set -euo pipefail
+
+if [ "$#" -eq 0 ]; then
+  echo "Usage: $0 <command>"
+  exit 1
+fi
+
+HOSTS=( $(yq '.all.children.homelab.hosts[].ansible_host' baseos/ansible/inventory/hosts.yml) )
+
+EXIT_CODE=0
+
+for HOST in "${HOSTS[@]}"; do
+  echo "===== $HOST ====="
+  ssh "$HOST" -- "$@" || EXIT_CODE=$?
+done
+
+exit $EXIT_CODE
