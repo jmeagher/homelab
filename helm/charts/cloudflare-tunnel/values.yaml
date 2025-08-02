@@ -1,0 +1,26 @@
+# Default values for cloudflare-tunnel
+# This is a YAML-formatted file.
+
+# Namespace where the cloudflare tunnel deployment will be created
+namespace: default
+
+# Number of replicas for the cloudflared deployment
+replicas: 2
+
+# Resource limits and requests
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "50m"
+  limits:
+    memory: "128Mi"
+    cpu: "100m"
+
+# Cloudflared image configuration
+image:
+  repository: cloudflare/cloudflared
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Secret name for the tunnel token
+secretName: tunnel-token 

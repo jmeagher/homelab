@@ -1,5 +1,8 @@
 # Homelab Automation Makefile
 
+# Run everything in order
+all: ansible k0s helm
+
 # Run Ansible playbook
 ansible:
 	cd baseos/ansible && ansible-playbook -i inventory/hosts.yml site.yml
@@ -16,8 +19,5 @@ k0sconfig:
 # Deploy with Helmfile
 helm:
 	cd helm && helmfile apply
-
-# Run everything in order
-all: ansible k0s helm
 
 .PHONY: ansible k0s helm all k0sreset

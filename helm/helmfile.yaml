@@ -21,10 +21,10 @@ releases:
     values:
       - values/k8s-monitoring.yaml
     createNamespace: true
-  - name: tailscale-operator
-    namespace: tailscale
-    chart: tailscale/tailscale-operator
-    version: "1.84.2"
+  - name: cloudflare-tunnel
+    namespace: cloudflare
+    chart: ./charts/cloudflare-tunnel
+    version: "2025.7.1"
     values:
-      - values/tailscale-operator.yaml
+      - values/cloudflare-tunnel.yaml
     createNamespace: true

@@ -1,0 +1,6 @@
+# Values for cloudflare-tunnel chart
+namespace: cloudflare
+
+# Set the image tag to match the chart version in helmfile.yaml
+image:
+  tag: "latest"
